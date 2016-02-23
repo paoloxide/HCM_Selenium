@@ -19,7 +19,7 @@
 	<test name="Configure Offerings">    
  	 <classes>
    	 <parameter name="TestNo" value="Test Case 1">
-		<parameter name="ExcelFilePath" value="//var//jenkins_home//jobs//Build//workspace//SampleTestData.xlsx"></parameter>
+		<parameter name="ExcelFilePath" value="//var//jenkins_home//jobs//Oracle//jobs//HCM//jobs//Build//workspace//SampleTestData.xlsx"></parameter>
     	<parameter name="ExcelSheetName" value="Configure Offerings"></parameter>
      	 <class name="hcm.tests.ConfigureOfferingsTest"/>      
      	 </parameter>
