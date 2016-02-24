@@ -32,9 +32,6 @@ public class FuseWelcomePage extends BasePage{
 		log("Clicked the Navigator...");
 		System.out.println("Clicked the Navigator...");	
 		
-		clickByXpath("//a[contains(text(),'"+ menu +"')]");		
-		log("Clicking " + menu +"...");
-		System.out.println("Clicking " + menu +"...");
 	}
 
 }
