@@ -23,7 +23,17 @@
     	<parameter name="ExcelSheetName" value="Configure Offerings"></parameter>
      	 <class name="hcm.tests.ConfigureOfferingsTest"/>      
      	 </parameter>
-    	</classes>
+      </classes>
+  	</test> 
+  	
+  	<test name="Configure Offerings 2">    
+ 	 <classes>
+   	 <parameter name="TestNo" value="Test Case 2">
+		<parameter name="ExcelFilePath" value="//var//jenkins_home//jobs//Oracle//jobs//HCM//jobs//Build//workspace//SampleTestData.xlsx"></parameter>
+    	<parameter name="ExcelSheetName" value="Configure Offerings"></parameter>
+     	 <class name="hcm.tests.ConfigureOfferingsTest"/>      
+     	 </parameter>
+      </classes>
   	</test> 
   	
 <!--   	<test name="Compensation Management">     -->
