@@ -208,7 +208,7 @@ import org.apache.poi.ss.usermodel.Row;
 		            }
 		            else if (webBrowser.equalsIgnoreCase("firefox"))
 		            {
-		            	driver = new RemoteWebDriver(new URL("http://10.0.0.198:4444/wd/hub"), DesiredCapabilities.firefox());
+		            	driver = new RemoteWebDriver(new URL("http://selenium-hub:4444/wd/hub"), DesiredCapabilities.firefox());
 		            	//driver = new ExtendedFirefoxDriver(createCapabilities(webBrowser));
 		                System.out.println("Running Test in FireFox");
 		                log("Running Test in FireFox");
