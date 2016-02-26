@@ -72,13 +72,20 @@ public class ConfigureOfferingsTest extends BaseTest {
 		
 		while (getExcelData(mainTask).length() > 0){
 			
+			//Expanding expandable folders
+			if (is_element_visible("//tbody/tr/td/div[contains(text(),'"+getExcelData(subTask)+"')]/span/a[contains(@title,'Expand')]", "xpath")){
+				System.out.println("found the inner directory...");
+				task.clickExpandFolder(subTask);
+			} 
+			
 			if(getExcelData(subTask).length() > 0 && getExcelData(status).length() > 0){
 		
 				if(getExcelData(mainTask).length() > 0){
 			
 					Thread.sleep(3000);
+					//if(!is_element_visible("//tbody/tr/td/div[contains(text(),'"+getExcelData(mainTask)+"')]/../../../../../../../../tr/td/div/table/tbody/tr/td/div[contains(text(),'"+getExcelData(subTask)+"')]/../../td/span/span/span/input[@checked='']" , "xpath")){
 					if(!is_element_visible("//tbody/tr/td/div[contains(text(),'"+getExcelData(mainTask)+"')]/../../../../../../../../tr/td/div/table/tbody/tr/td/div[contains(text(),'"+getExcelData(subTask)+"')]/../../td/span/span/span/input[@checked='']" , "xpath")){
-						
+					
 						task.clickSubTaskCheckbox(mainTask, subTask);
 						Thread.sleep(3000);
 						task.clickSaveButton();
@@ -111,7 +118,62 @@ public class ConfigureOfferingsTest extends BaseTest {
 			
 			subTask += 2;
 			status += 2;
-		}		
+		}
+		
+		//Revised...2/26/2016
+		//Expand folder
+		//if (is_element_visible("//tbody/tr/td/div[contains(text(),'"+getExcelData(7)+"')]/../../../../../../../../tr/td/div/table/tbody/tr/td/div[contains(text(),'"+getExcelData(16)+"')]/../../td/span/a[contains(@title,'Expand')]" , "xpath")){
+		//if (is_element_visible("//tbody/tr/td/div[contains(text(),'"+getExcelData(16)+"')]/span/span/a[contains(@title,'Expand')]", "xpath")){
+		
+		
+		/* //Enable task
+		
+		int submainTask = 16;
+		int subsubTask = 17;
+		int substatus = 18;
+		
+		while (getExcelData(submainTask).length() > 0){
+			
+			if(getExcelData(subsubTask).length() > 0 && getExcelData(substatus).length() > 0){
+		
+				if(getExcelData(submainTask).length() > 0){
+			
+					Thread.sleep(3000);
+					if(!is_element_visible("//tbody/tr/td/div[contains(text(),'"+getExcelData(submainTask)+"')]/../../../../../../../../tr/td/div/table/tbody/tr/td/div[contains(text(),'"+getExcelData(subsubTask)+"')]/../../td/span/span/span/input[@checked='']" , "xpath")){
+						
+						task.clickSubTaskCheckbox(submainTask, subsubTask);
+						Thread.sleep(3000);
+						task.clickSaveButton();
+						Thread.sleep(5000);
+						//takeScreenshot();
+										
+					} else{
+										
+						//takeScreenshot();
+						System.out.println(getExcelData(subsubTask)+" task is already enabled");
+						log(getExcelData(subsubTask)+" task is already enabled");
+					}
+					
+					if(getTextinElement("//tbody/tr/td/div[contains(text(),'"+getExcelData(submainTask)+"')]/../../../../../../../../tr/td/div/table/tbody/tr/td/div[contains(text(),'"+getExcelData(subsubTask)+"')]/../../td/span/a", "xpath").equalsIgnoreCase(getExcelData(substatus))){
+										
+						//takeScreenshot();
+						System.out.println(getExcelData(subsubTask)+" is already in "+getExcelData(substatus)+" status");
+						log(getExcelData(subsubTask)+" is already in "+getExcelData(substatus)+" status");
+					} else {
+						
+						task.changeSubTaskStatus(submainTask, subsubTask, substatus);
+						//takeScreenshot();
+					}
+				
+				}
+			} else{
+				
+				break;
+			}
+			
+			subsubTask += 2;
+			substatus += 2;
+		} */
 		
 		Thread.sleep(1000);
 		//takeScreenshot();
@@ -127,4 +189,3 @@ public class ConfigureOfferingsTest extends BaseTest {
 		}
 		 	  
 	  }
-
