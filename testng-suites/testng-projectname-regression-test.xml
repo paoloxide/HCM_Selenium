@@ -6,21 +6,20 @@
 		<listener class-name="org.uncommons.reportng.JUnitXMLReporter"/>
 	</listeners>
 	
-<!-- 	<test name="Manage Performance Roles">     -->
-<!--  	 <classes> -->
-<!--    	 <parameter name="TestNo" value="Test Case 1"> -->
-<!-- 		<parameter name="ExcelFilePath" value="C:\\Workspace\\hcmselenium\\src\\hcm\\testdata\\SampleTestData.xlsx"></parameter> -->
-<!--     	<parameter name="ExcelSheetName" value="Manage Performance"></parameter> -->
-<!--      	 <class name="hcm.tests.ManagePerformanceRolesTest"/>       -->
-<!--      	 </parameter> -->
-<!--     	</classes> -->
-<!--   	</test>    -->
+ 	<!--test name="Manage Performance Roles">     
+  	 <classes> 
+    	 <parameter name="TestNo" value="Test Case 1"> 
+ 		<parameter name="ExcelFilePath" value="C:\\Users\\jerrick.m.falogme\\Desktop\\my_workspace\\HCM-Configs\\SampleTestData.xlsx"></parameter> 
+     	<parameter name="ExcelSheetName" value="Manage Performance"></parameter> 
+      	 <class name="hcm.tests.ManagePerformanceRolesTest"/>       
+      	 </parameter> 
+     	</classes> 
+   	</test-->    
 
 	<test name="Configure Offerings 1">    
  	 <classes>
    	 <parameter name="TestNo" value="Test Case 1">
 		<parameter name="ExcelFilePath" value="//var//jenkins_home//jobs//Oracle//jobs//HCM//jobs//Build//workspace//SampleTestData.xlsx"></parameter>
-		<!--parameter name="ExcelFilePath" value="C:\\Users\\jerrick.m.falogme\\Desktop\\my_workspace\\HCM-Configs\\SampleTestData.xlsx"></parameter-->
     	<parameter name="ExcelSheetName" value="Configure Offerings"></parameter>
      	 <class name="hcm.tests.ConfigureOfferingsTest"/>      
      	 </parameter>
@@ -67,16 +66,135 @@
       </classes>
   	</test> 
 	
-	
-	<!--test name="Configure Offerings 6">    
+	<test name="Configure Offerings 6">    
  	 <classes>
    	 <parameter name="TestNo" value="Test Case 6">
-		<parameter name="ExcelFilePath" value="C:\\Users\\jerrick.m.falogme\\Desktop\\my_workspace\\HCM-Configs\\SampleTestData.xlsx"></parameter>
+		<parameter name="ExcelFilePath" value="//var//jenkins_home//jobs//Oracle//jobs//HCM//jobs//Build//workspace//SampleTestData.xlsx"></parameter>
     	<parameter name="ExcelSheetName" value="Configure Offerings"></parameter>
      	 <class name="hcm.tests.ConfigureOfferingsTest"/>      
      	 </parameter>
       </classes>
-  	</test--> 
+  	</test> 
+	
+		
+	<test name="Configure Offerings 7">    
+ 	 <classes>
+   	 <parameter name="TestNo" value="Test Case 7">
+		<parameter name="ExcelFilePath" value="//var//jenkins_home//jobs//Oracle//jobs//HCM//jobs//Build//workspace//SampleTestData.xlsx"></parameter>
+    	<parameter name="ExcelSheetName" value="Configure Offerings"></parameter>
+     	 <class name="hcm.tests.ConfigureOfferingsTest"/>      
+     	 </parameter>
+      </classes>
+  	</test>	
+	<test name="Configure Offerings 8">    
+ 	 <classes>
+   	 <parameter name="TestNo" value="Test Case 8">
+		<parameter name="ExcelFilePath" value="//var//jenkins_home//jobs//Oracle//jobs//HCM//jobs//Build//workspace//SampleTestData.xlsx"></parameter>
+    	<parameter name="ExcelSheetName" value="Configure Offerings"></parameter>
+     	 <class name="hcm.tests.ConfigureOfferingsTest"/>      
+     	 </parameter>
+      </classes>
+  	</test>	
+	<test name="Configure Offerings 9">    
+ 	 <classes>
+   	 <parameter name="TestNo" value="Test Case 9">
+		<parameter name="ExcelFilePath" value="//var//jenkins_home//jobs//Oracle//jobs//HCM//jobs//Build//workspace//SampleTestData.xlsx"></parameter>
+    	<parameter name="ExcelSheetName" value="Configure Offerings"></parameter>
+     	 <class name="hcm.tests.ConfigureOfferingsTest"/>      
+     	 </parameter>
+      </classes>
+  	</test>	
+	<test name="Configure Offerings 10">    
+ 	 <classes>
+   	 <parameter name="TestNo" value="Test Case 10">
+		<parameter name="ExcelFilePath" value="//var//jenkins_home//jobs//Oracle//jobs//HCM//jobs//Build//workspace//SampleTestData.xlsx"></parameter>
+    	<parameter name="ExcelSheetName" value="Configure Offerings"></parameter>
+     	 <class name="hcm.tests.ConfigureOfferingsTest"/>      
+     	 </parameter>
+      </classes>
+  	</test>	
+	<test name="Configure Offerings 11">    
+ 	 <classes>
+   	 <parameter name="TestNo" value="Test Case 11">
+		<parameter name="ExcelFilePath" value="//var//jenkins_home//jobs//Oracle//jobs//HCM//jobs//Build//workspace//SampleTestData.xlsx"></parameter>
+    	<parameter name="ExcelSheetName" value="Configure Offerings"></parameter>
+     	 <class name="hcm.tests.ConfigureOfferingsTest"/>      
+     	 </parameter>
+      </classes>
+  	</test>	
+	<test name="Configure Offerings 12">    
+ 	 <classes>
+   	 <parameter name="TestNo" value="Test Case 12">
+		<parameter name="ExcelFilePath" value="//var//jenkins_home//jobs//Oracle//jobs//HCM//jobs//Build//workspace//SampleTestData.xlsx"></parameter>
+    	<parameter name="ExcelSheetName" value="Configure Offerings"></parameter>
+     	 <class name="hcm.tests.ConfigureOfferingsTest"/>      
+     	 </parameter>
+      </classes>
+  	</test>	
+	<test name="Configure Offerings 13">    
+ 	 <classes>
+   	 <parameter name="TestNo" value="Test Case 13">
+		<parameter name="ExcelFilePath" value="//var//jenkins_home//jobs//Oracle//jobs//HCM//jobs//Build//workspace//SampleTestData.xlsx"></parameter>
+    	<parameter name="ExcelSheetName" value="Configure Offerings"></parameter>
+     	 <class name="hcm.tests.ConfigureOfferingsTest"/>      
+     	 </parameter>
+      </classes>
+  	</test>	
+	<test name="Configure Offerings 14">    
+ 	 <classes>
+   	 <parameter name="TestNo" value="Test Case 14">
+		<parameter name="ExcelFilePath" value="//var//jenkins_home//jobs//Oracle//jobs//HCM//jobs//Build//workspace//SampleTestData.xlsx"></parameter>
+    	<parameter name="ExcelSheetName" value="Configure Offerings"></parameter>
+     	 <class name="hcm.tests.ConfigureOfferingsTest"/>      
+     	 </parameter>
+      </classes>
+  	</test>	
+	<test name="Configure Offerings 15">    
+ 	 <classes>
+   	 <parameter name="TestNo" value="Test Case 15">
+		<parameter name="ExcelFilePath" value="//var//jenkins_home//jobs//Oracle//jobs//HCM//jobs//Build//workspace//SampleTestData.xlsx"></parameter>
+    	<parameter name="ExcelSheetName" value="Configure Offerings"></parameter>
+     	 <class name="hcm.tests.ConfigureOfferingsTest"/>      
+     	 </parameter>
+      </classes>
+  	</test>	
+	<test name="Configure Offerings 16">    
+ 	 <classes>
+   	 <parameter name="TestNo" value="Test Case 16">
+		<parameter name="ExcelFilePath" value="//var//jenkins_home//jobs//Oracle//jobs//HCM//jobs//Build//workspace//SampleTestData.xlsx"></parameter>
+    	<parameter name="ExcelSheetName" value="Configure Offerings"></parameter>
+     	 <class name="hcm.tests.ConfigureOfferingsTest"/>      
+     	 </parameter>
+      </classes>
+  	</test>	
+	<test name="Configure Offerings 17">    
+ 	 <classes>
+   	 <parameter name="TestNo" value="Test Case 17">
+		<parameter name="ExcelFilePath" value="//var//jenkins_home//jobs//Oracle//jobs//HCM//jobs//Build//workspace//SampleTestData.xlsx"></parameter>
+    	<parameter name="ExcelSheetName" value="Configure Offerings"></parameter>
+     	 <class name="hcm.tests.ConfigureOfferingsTest"/>      
+     	 </parameter>
+      </classes>
+  	</test>	
+	<test name="Configure Offerings 18">    
+ 	 <classes>
+   	 <parameter name="TestNo" value="Test Case 18">
+		<parameter name="ExcelFilePath" value="//var//jenkins_home//jobs//Oracle//jobs//HCM//jobs//Build//workspace//SampleTestData.xlsx"></parameter>
+    	<parameter name="ExcelSheetName" value="Configure Offerings"></parameter>
+     	 <class name="hcm.tests.ConfigureOfferingsTest"/>      
+     	 </parameter>
+      </classes>
+  	</test>	
+	<test name="Configure Offerings 19">    
+ 	 <classes>
+   	 <parameter name="TestNo" value="Test Case 19">
+		<parameter name="ExcelFilePath" value="//var//jenkins_home//jobs//Oracle//jobs//HCM//jobs//Build//workspace//SampleTestData.xlsx"></parameter>
+    	<parameter name="ExcelSheetName" value="Configure Offerings"></parameter>
+     	 <class name="hcm.tests.ConfigureOfferingsTest"/>      
+     	 </parameter>
+      </classes>
+  	</test>
+	
   	
   	<!--test name="Configure Offerings 2">    
  	 <classes>

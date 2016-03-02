@@ -38,6 +38,10 @@ public class ConfigureOfferingsTest extends BaseTest {
     }
 
 	public void configureOfferings() throws Exception{
+		
+		boolean isScrollingDown = true;
+		boolean isNowClickable = false;
+		boolean hasSetMainTask = false;
 			
 		LoginPage login = new LoginPage(driver);
 		//takeScreenshot();
@@ -54,59 +58,123 @@ public class ConfigureOfferingsTest extends BaseTest {
 		//takeScreenshot();
 		
 		task.clickTask("Configure Offerings");
-		Thread.sleep(3000);
+		Thread.sleep(1500);//3000
 		//takeScreenshot();
-		
-		
-		//Expand folder
-		if (is_element_visible("//tbody/tr/td/div[contains(text(),'"+getExcelData(7)+"')]/span/a[contains(@title,'Expand')]", "xpath")){
 			
-		task.clickExpandFolder(7);
-		} 
-		
 		//Enable task
-		
 		int mainTask = 7;
 		int subTask = 8;
 		int status = 9;
+		String mainRef = "afrrk";
+		String subRef = "afrap";
+		String mainTaskCommonPath, subTaskCommonPath;
+		//NOTE: Use afrrk to identify a mainTask, succeeding subfolder use as afrap;;
+		
+		//Identifying referenceID for the Task group;;
+		task.waitForElementToBeClickable(60, mainTask, subTask, "//table/tbody/tr/td/a/img[contains(@title,'View') or contains(@title, 'Feature')]");
+		while(!is_element_visible("//tr/td/div/table/tbody/tr/td/div[text()='"+getExcelData(mainTask)+"']", "xpath")){
+			isScrollingDown = task.scrollDownToElement(isScrollingDown, mainTask);
+		}
+			String refID = task.findMainTaskUniqueID(mainTask);
 		
 		while (getExcelData(mainTask).length() > 0){
+			System.out.println("\n***************\nNow peforming tests on subtask: "+getExcelData(subTask));
+			//Crack folder group
+			//Initializing variable conditions;
+			mainTaskCommonPath = "//tr[@_"+mainRef+"='"+refID+"']/td/div/table/tbody/tr/td/div[text()='"+getExcelData(mainTask)+"']";
+			subTaskCommonPath  = "//tr[@_"+subRef+"='"+refID+"' or contains(@_"+subRef+",'"+refID+"_')]/td/div/table/tbody/tr/td/div[text() = '"+getExcelData(subTask)+"']";
+			//System.out.println("subTaskCommonPath has been set to:" +subTaskCommonPath);
+		
+			
+			//Revamping searching method....
+			//Make sure that mainTask
+			while(!is_element_visible(mainTaskCommonPath, "xpath") && !hasSetMainTask){
+				isScrollingDown = task.scrollDownToElement(isScrollingDown, mainTask);
+				hasSetMainTask = true;
+				if(is_element_visible(mainTaskCommonPath, "xpath")){
+					task.scrollElementIntoView(mainTask);
+				}
+			}
+			
+			//Expand main task folder
+ 			if (is_element_visible(mainTaskCommonPath+"/span/a[contains(@title,'Expand')]", "xpath")){
+				task.clickExpandFolder(mainTask);
+				hasSetMainTask = true;
+			}
+			
+			isScrollingDown = true;
+			System.out.println("Subtask adjustments preparation in progress.....");
+			//Ensure succeeding sub task will be visible;;
+			while(!is_element_visible(subTaskCommonPath, "xpath") 
+						&& (getExcelData(subTask).length()>0 
+							&& getExcelData(status).length()>0)){
+								
+				System.out.println("adjustments in progresss.....");
+				isScrollingDown = task.scrollDownToElement(isScrollingDown, subTask);
+				
+				if(is_element_visible(subTaskCommonPath, "xpath")){
+					task.scrollElementIntoView(subTask);
+				}
+				//Experimental;;; BUGFIX: Test # 9: Comment if breaks other tests;;
+				if(is_element_visible(subTaskCommonPath, "xpath")){
+					task.scrollElementIntoView(subTask);
+					break;
+				}
+			}
+			
+			//Adjust scroll bar to center the task
+			if(is_element_visible(subTaskCommonPath, "xpath")){
+				task.scrollElementIntoView(subTask);
+			}
 			
 			//Expanding expandable folders
-			if (is_element_visible("//tbody/tr/td/div[contains(text(),'"+getExcelData(subTask)+"')]/span/a[contains(@title,'Expand')]", "xpath")){
+			if (is_element_visible(subTaskCommonPath+"/span/a[contains(@title,'Expand')]", "xpath")){
 				System.out.println("found the inner directory...");
 				task.clickExpandFolder(subTask);
 			} 
 			
+			System.out.println("Preparing subtasks to be run....");
 			if(getExcelData(subTask).length() > 0 && getExcelData(status).length() > 0){
 		
+				System.out.println("Customization of subtask in progress.......");
 				if(getExcelData(mainTask).length() > 0){
-			
-					Thread.sleep(3000);
-					//if(!is_element_visible("//tbody/tr/td/div[contains(text(),'"+getExcelData(mainTask)+"')]/../../../../../../../../tr/td/div/table/tbody/tr/td/div[contains(text(),'"+getExcelData(subTask)+"')]/../../td/span/span/span/input[@checked='']" , "xpath")){
-					if(!is_element_visible("//tbody/tr/td/div[contains(text(),'"+getExcelData(mainTask)+"')]/../../../../../../../../tr/td/div/table/tbody/tr/td/div[contains(text(),'"+getExcelData(subTask)+"')]/../../td/span/span/span/input[@checked='']" , "xpath")){
 					
-						task.clickSubTaskCheckbox(mainTask, subTask);
-						Thread.sleep(3000);
+					System.out.println("Ticking checkbox in progress.....");
+					if(!is_element_visible(subTaskCommonPath+"/../../td/span/span/span/input[@checked='']" , "xpath")){
+					
+						task.clickSubTaskCheckbox(mainTask, subTask, subTaskCommonPath);
+						Thread.sleep(1500); //3000
 						task.clickSaveButton();
-						Thread.sleep(5000);
+						Thread.sleep(2500); //3000
 						//takeScreenshot();
 										
-					} else{
-										
+					}else{
+						
+						if(!is_element_visible(subTaskCommonPath+"/../../td/span/span/span/input[@checked='']" , "xpath")){
+							task.clickSubTaskCheckbox(mainTask, subTask, subTaskCommonPath);
+							Thread.sleep(1500); //3000
+							task.clickSaveButton();
+							Thread.sleep(2500); //3000
+							//takeScreenshot();
+							break;				
+						}
+						
+						System.out.println("updating task notes.....");
 						//takeScreenshot();
 						System.out.println(getExcelData(subTask)+" task is already enabled");
 						log(getExcelData(subTask)+" task is already enabled");
-					}
+					}	
 					
-					if(getTextinElement("//tbody/tr/td/div[contains(text(),'"+getExcelData(mainTask)+"')]/../../../../../../../../tr/td/div/table/tbody/tr/td/div[contains(text(),'"+getExcelData(subTask)+"')]/../../td/span/a", "xpath").equalsIgnoreCase(getExcelData(status))){
+					System.out.println("status adjustment in progress......");
+					task.scrollElementIntoView(subTask);
+					if(getTextinElement(subTaskCommonPath+"/../../td/span/a", "xpath").equalsIgnoreCase(getExcelData(status))){
 										
 						//takeScreenshot();
 						System.out.println(getExcelData(subTask)+" is already in "+getExcelData(status)+" status");
 						log(getExcelData(subTask)+" is already in "+getExcelData(status)+" status");
 					} else {
-						
-						task.changeSubTaskStatus(mainTask, subTask, status);
+						System.out.println("SubTask Status updates in progress....");
+						task.changeSubTaskStatus(mainTask, subTask, status, subTaskCommonPath);
 						//takeScreenshot();
 					}
 				
@@ -121,71 +189,18 @@ public class ConfigureOfferingsTest extends BaseTest {
 		}
 		
 		//Revised...2/26/2016
-		//Expand folder
-		//if (is_element_visible("//tbody/tr/td/div[contains(text(),'"+getExcelData(7)+"')]/../../../../../../../../tr/td/div/table/tbody/tr/td/div[contains(text(),'"+getExcelData(16)+"')]/../../td/span/a[contains(@title,'Expand')]" , "xpath")){
-		//if (is_element_visible("//tbody/tr/td/div[contains(text(),'"+getExcelData(16)+"')]/span/span/a[contains(@title,'Expand')]", "xpath")){
 		
-		
-		/* //Enable task
-		
-		int submainTask = 16;
-		int subsubTask = 17;
-		int substatus = 18;
-		
-		while (getExcelData(submainTask).length() > 0){
-			
-			if(getExcelData(subsubTask).length() > 0 && getExcelData(substatus).length() > 0){
-		
-				if(getExcelData(submainTask).length() > 0){
-			
-					Thread.sleep(3000);
-					if(!is_element_visible("//tbody/tr/td/div[contains(text(),'"+getExcelData(submainTask)+"')]/../../../../../../../../tr/td/div/table/tbody/tr/td/div[contains(text(),'"+getExcelData(subsubTask)+"')]/../../td/span/span/span/input[@checked='']" , "xpath")){
-						
-						task.clickSubTaskCheckbox(submainTask, subsubTask);
-						Thread.sleep(3000);
-						task.clickSaveButton();
-						Thread.sleep(5000);
-						//takeScreenshot();
-										
-					} else{
-										
-						//takeScreenshot();
-						System.out.println(getExcelData(subsubTask)+" task is already enabled");
-						log(getExcelData(subsubTask)+" task is already enabled");
-					}
-					
-					if(getTextinElement("//tbody/tr/td/div[contains(text(),'"+getExcelData(submainTask)+"')]/../../../../../../../../tr/td/div/table/tbody/tr/td/div[contains(text(),'"+getExcelData(subsubTask)+"')]/../../td/span/a", "xpath").equalsIgnoreCase(getExcelData(substatus))){
-										
-						//takeScreenshot();
-						System.out.println(getExcelData(subsubTask)+" is already in "+getExcelData(substatus)+" status");
-						log(getExcelData(subsubTask)+" is already in "+getExcelData(substatus)+" status");
-					} else {
-						
-						task.changeSubTaskStatus(submainTask, subsubTask, substatus);
-						//takeScreenshot();
-					}
-				
-				}
-			} else{
-				
-				break;
-			}
-			
-			subsubTask += 2;
-			substatus += 2;
-		} */
-		
-		Thread.sleep(1000);
+		Thread.sleep(1000);//1000
 		//takeScreenshot();
 		
 		task.clickSaveAndCloseButton();
 		
-		System.out.println("Configuration Completed");
+		System.out.println("Configuration Completed\n***************\n");
 		log("Configuration Completed");
 		
-		Thread.sleep(3000);
+		Thread.sleep(1500);//3000
 		//takeScreenshot();
 				
-		}
+	}
 		 	  
-	  }
+}
