@@ -91,10 +91,10 @@ public class CompensationManagementTest extends BaseTest {
 		assertTextInElementPresent("//tr/td/div/table/tbody/tr/td/div[contains(text(),'"+getExcelData(10)+"')]", 10);
 		endTableRep();
 		
-		task.clickMainTaskCheckbox(7);
-		task.clickSubTaskCheckbox(7,8);
-		task.clickSubTaskCheckbox(7,9);
-		task.clickSubTaskCheckbox(7,10);
+		//task.clickMainTaskCheckbox(7);
+		//task.clickSubTaskCheckbox(7,8);
+		//task.clickSubTaskCheckbox(7,9);
+		//task.clickSubTaskCheckbox(7,10);
 		takeScreenshot();
 		
 		task.clickSaveAndOpenProjectButton();

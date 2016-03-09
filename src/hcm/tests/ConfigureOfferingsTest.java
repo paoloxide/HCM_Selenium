@@ -63,8 +63,9 @@ public class ConfigureOfferingsTest extends BaseTest {
 			
 		//Enable task
 		int mainTask = 7;
-		int subTask = 8;
-		int status = 9;
+		int mainStatus = 8;
+		int subTask = 9;
+		int status = 10;
 		String mainRef = "afrrk";
 		String subRef = "afrap";
 		String mainTaskCommonPath, subTaskCommonPath;
@@ -75,7 +76,7 @@ public class ConfigureOfferingsTest extends BaseTest {
 		while(!is_element_visible("//tr/td/div/table/tbody/tr/td/div[text()='"+getExcelData(mainTask)+"']", "xpath")){
 			isScrollingDown = task.scrollDownToElement(isScrollingDown, mainTask);
 		}
-			String refID = task.findMainTaskUniqueID(mainTask);
+			String refID = task.findMainTaskUniqueID(-1, mainTask);
 		
 		while (getExcelData(mainTask).length() > 0){
 			System.out.println("\n***************\nNow peforming tests on subtask: "+getExcelData(subTask));
@@ -90,9 +91,20 @@ public class ConfigureOfferingsTest extends BaseTest {
 			//Make sure that mainTask
 			while(!is_element_visible(mainTaskCommonPath, "xpath") && !hasSetMainTask){
 				isScrollingDown = task.scrollDownToElement(isScrollingDown, mainTask);
+			}
+			
+			if(is_element_visible(mainTaskCommonPath, "xpath")){
+				task.scrollElementIntoView(-1, mainTask);
+				task.clickMainTaskCheckbox(mainTask, mainTaskCommonPath);
 				hasSetMainTask = true;
-				if(is_element_visible(mainTaskCommonPath, "xpath")){
-					task.scrollElementIntoView(mainTask);
+				if(getTextinElement(mainTaskCommonPath+"/../../td/span/a", "xpath").equalsIgnoreCase(getExcelData(mainStatus))){
+					//takeScreenshot();
+					System.out.println(getExcelData(mainTask)+" is already in "+getExcelData(mainStatus)+" status");
+					log(getExcelData(mainTask)+" is already in "+getExcelData(mainStatus)+" status");
+				}else {
+					System.out.println("SubTask Status updates in progress....");
+					task.changeSubTaskStatus(mainTask, subTask, mainStatus, mainTaskCommonPath);
+					//takeScreenshot();
 				}
 			}
 			
@@ -113,18 +125,18 @@ public class ConfigureOfferingsTest extends BaseTest {
 				isScrollingDown = task.scrollDownToElement(isScrollingDown, subTask);
 				
 				if(is_element_visible(subTaskCommonPath, "xpath")){
-					task.scrollElementIntoView(subTask);
+					task.scrollElementIntoView(-1, subTask);
 				}
 				//Experimental;;; BUGFIX: Test # 9: Comment if breaks other tests;;
 				if(is_element_visible(subTaskCommonPath, "xpath")){
-					task.scrollElementIntoView(subTask);
+					task.scrollElementIntoView(-1, subTask);
 					break;
 				}
 			}
 			
 			//Adjust scroll bar to center the task
 			if(is_element_visible(subTaskCommonPath, "xpath")){
-				task.scrollElementIntoView(subTask);
+				task.scrollElementIntoView(-1, subTask);
 			}
 			
 			//Expanding expandable folders
@@ -166,7 +178,7 @@ public class ConfigureOfferingsTest extends BaseTest {
 					}	
 					
 					System.out.println("status adjustment in progress......");
-					task.scrollElementIntoView(subTask);
+					task.scrollElementIntoView(-1, subTask);
 					if(getTextinElement(subTaskCommonPath+"/../../td/span/a", "xpath").equalsIgnoreCase(getExcelData(status))){
 										
 						//takeScreenshot();
