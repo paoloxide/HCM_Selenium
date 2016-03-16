@@ -4,7 +4,10 @@ import org.apache.commons.exec.ExecuteException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -176,6 +179,61 @@ public class TaskListManagerTopPage extends BasePage{
 		}
 		return scrollDownAgain;
 	}
+
+	public boolean jsScrollDown(boolean isScrollingDown) throws Exception{
+		
+		int scrollValue = 460;
+		System.out.println("Scroll is now moving....");	
+		JavascriptExecutor js = (JavascriptExecutor)driver;
+		boolean scrollDownAgain = (boolean) js.executeScript( 
+				
+				"taskFolderArray=[];"+
+				"taskFolderInt = -255;"+
+				"queryFolderName = [];"+
+				"oldScrollerValue = 0;"+
+				"queryFolderName = document.querySelectorAll('div');"+
+
+				"for(var i=0; i<queryFolderName.length;i++){"+
+				"	curFolderId = queryFolderName[i].id;"+
+				"	curFolderId1 = queryFolderName[i].style.overflow;"+
+				"	curFolderId2 = queryFolderName[i].style.position;"+
+				"	if(taskFolderInt < 0)taskFolderInt = -1;"+
+				"	if(curFolderId.contains('scroller')){"+
+				"		taskFolderInt += 1;	"+
+				"		taskFolderArray[taskFolderInt] = [curFolderId, curFolderId1, curFolderId2];"+
+				"}}"+
+	      
+				"for(var j =0; j<taskFolderArray.length;j++){"+
+				"	  newScroller = document.getElementById(taskFolderArray[j][0]);"+
+				"	  if(newScroller.scrollTop != undefined){"+
+				"			if("+isScrollingDown+") {"+
+				"				if(taskFolderArray[j][0].contains('scroller')){"+
+				"					oldScrollerValue = newScroller.scrollTop;}"+
+				
+				"				newScroller.scrollTop += "+scrollValue+";}"+
+				"			else if(!"+isScrollingDown+") newScroller.scrollTop = 0;"+
+				"			if(oldScrollerValue == newScroller.scrollTop"+
+				"				&& taskFolderArray[j][0].contains('scroller')"+
+				"					&& oldScrollerValue > 0)"+
+				"					return false;"+
+				"	  }"+
+				"}return true;"
+			);
+			Thread.sleep(1000);
+			//WebDriverWait waitLoadHandler = new WebDriverWait(driver, 4);
+			Wait<WebDriver> waitLoadHandler = new FluentWait<WebDriver>(driver)
+					.withTimeout(5, TimeUnit.SECONDS)
+					.pollingEvery(500, TimeUnit.MILLISECONDS)
+					.ignoring(NoSuchElementException.class)
+					.ignoring(StaleElementReferenceException.class);
+			try{
+				waitLoadHandler.until(ExpectedConditions.invisibilityOfElementWithText(By.xpath("//div[text()='Fetching Data...']"), "Fetching Data..."));
+				System.out.println("Page loading has been finished.....");
+			}catch(TimeoutException e){
+				e.printStackTrace();
+			}
+			return scrollDownAgain;
+	}
 	
 	public void scrollElementIntoView(int rowNum, int colNum) throws Exception{
 		
@@ -301,6 +359,18 @@ public class TaskListManagerTopPage extends BasePage{
 		System.out.println("Check element presence is now finised...");
 	}
 	
+	public void fluentWaitForElementInvisibility(String xPath, String textValue, int waitTime) throws Exception{
+		
+		Wait<WebDriver> waitLoadHandler = new FluentWait<WebDriver>(driver)
+				.withTimeout(waitTime, TimeUnit.SECONDS)
+				.pollingEvery(500, TimeUnit.MILLISECONDS)
+				.ignoring(NoSuchElementException.class)
+				.ignoring(StaleElementReferenceException.class);
+		
+		waitLoadHandler.until(ExpectedConditions.invisibilityOfElementWithText(By.xpath(xPath), textValue));
+		System.out.println("Page loading has been finished.....");
+	}
+	
 	public void retryingFindClick(By by) throws Exception{
 
         int attempts = 0;
@@ -369,6 +439,69 @@ public class TaskListManagerTopPage extends BasePage{
 			
 		System.out.println("UniqueID is now....."+mainTaskUniqueID);
 		return mainTaskUniqueID;
+	}
+	
+	public ArrayList<String> queryAllVisibleTasks(ArrayList<String> oldArray){
+		java.util.List<WebElement> queryFolder = driver.findElements(By.xpath("//tr"));
+		ArrayList<String> allTasksTempHolder = new ArrayList<String>();
+		
+		System.out.println("\n**********");
+		String afrrkAttr, afrapAttr, caughtTask, textIn;
+		int index, entIndex, tasksIndex= 0;
+		int size = queryFolder.size();
+		
+		//for(WebElement task :queryFolder){
+		for(int i=0; i<size; i++){
+			caughtTask = "";
+			afrrkAttr = queryFolder.get(i).getAttribute("_afrrk"); // task --> queryFolder.get(i)
+			System.out.println("Done on afrrk...");
+			afrapAttr = queryFolder.get(i).getAttribute("_afrap");
+			System.out.println("Done on afrap...");
+			textIn =    queryFolder.get(i).getText();
+			System.out.println("Done on text...");
+			
+			if((afrapAttr == null && afrrkAttr != null || afrapAttr != null) 
+					&& !textIn.equals("") && !textIn.isEmpty()){
+				
+				System.out.println("Now holding: '"+textIn+"'");
+				index = textIn.indexOf("Yes");
+				if(index == -1){
+					index = textIn.indexOf("No");
+				}
+					if(index == -1){
+						index = textIn.indexOf("Implemented");
+					}
+						if(index == -1){
+							index = textIn.indexOf("Not Started");
+						}	
+							if(index == -1){
+								index = textIn.indexOf("In Progress");
+							}
+				
+				//Clean up InnerText Value.....
+				if(!textIn.isEmpty() && !textIn.equals("") && index != -1){
+					System.out.println("Cleaning up entry.....");
+					caughtTask = textIn.substring(0,index).substring(2);
+					entIndex = caughtTask.lastIndexOf("\n");
+					if(entIndex != -1){
+						caughtTask = caughtTask.substring(0,entIndex);
+						System.out.println("Filtered text:'"+caughtTask+"'");
+						allTasksTempHolder.add(caughtTask);
+						System.out.println("Now holding: "+allTasksTempHolder);
+					}
+				}
+				
+
+				System.out.println("Calculating here...");
+				if(oldArray.size() != 0 && allTasksTempHolder.size() == 3){
+					if(oldArray.get(2).contentEquals(allTasksTempHolder.get(2))){
+						return null;
+					}
+				}
+			}
+		}	
+		
+		return allTasksTempHolder;
 	}
 	
 	public void clickElementByXPath(String commonPath){
@@ -546,6 +679,42 @@ public class TaskListManagerTopPage extends BasePage{
 		}
 	}
 	
+	public void changeSubTaskStatus(int rowNum, int colNum, int colNum2, int colNum3, String commonPath) throws Exception{
+		
+		String folder = getCellData(rowNum, colNum);
+		String subfolder = getCellData(rowNum, colNum2);
+		System.out.println("entered new command...");
+		
+		clickByXpath(commonPath+"/../../td/span/a");
+			
+		log("Clicked "+folder+" subtask status...");
+		System.out.println("Clicked "+folder+" subtask status...");
+		
+		String status = getCellData(rowNum, colNum3);
+		clickByXpath("//div/label[text()='"+status+"']/../span/input");
+		log("Clicked "+status+"...");
+		System.out.println("Clicked "+status+"...");
+		
+		clickByXpath("//button[@title='Save and Close']");
+		Thread.sleep(5000);
+		log("Clicked Saved and Closed button...");
+		System.out.println("Clicked Saved and Closed button...");
+		
+		if(status.contentEquals("Not Started")){
+			clickByXpath("//button[text()='es']");
+			Thread.sleep(5000);
+			log("Clicked Yes button...");
+			System.out.println("Clicked Yes button...");
+		}
+		
+		try{
+			WebDriverWait wait = new WebDriverWait(driver, 10);
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button/span[text()='Y']"))).click();
+		} catch (Exception e){
+			
+		}
+	}
+	
 	public void clickExpandWorkForceDevelopment(){
 		
 		click("pt1:USma:0:MAnt1:1:pt1:r1:1:topAppPanel:applicationsTable1:_ATTp:table1:2::di");
@@ -579,7 +748,7 @@ public class TaskListManagerTopPage extends BasePage{
 	
 	public void enterSearchName(int colNum) throws Exception{
 		String value = getCellData(TestCaseRow, colNum);
-		enterText("pt1:USma:0:MAnt1:0:AP2:r3:0:qryId1:value10::content", value); //
+		enterText("pt1:USma:0:MAnt1:0:AP2:r3:0:qryId1:value10::content", value); 
 		log("Entered value in the Name...");
 		System.out.println("Entered value in the Name...");
 	}
@@ -710,13 +879,96 @@ public class TaskListManagerTopPage extends BasePage{
 					indexMain += 1;
 				}
 			}
-		}
+		}	
 		
-		//System.out.println(possibleMainTasks.toString());
+		return possibleMainTasks;
+	}	
+	
+	public String[][] queryAllTaskMainFolder(String[][] mainTaskAttrHolder) throws Exception{
+		
+		java.util.List<String> mainTaskHolder = new ArrayList<String>();
+		ArrayList<String> mainTask_afrrk = new ArrayList<String>();
+		String[][] possibleMainTasks = {};
+		String mainTask, afrrkAttr, afrapAttr;
+		int index, entIndex;
+		int intAfterMatch = 0;
+		boolean hasBeenFound = false, extractData = false;
+		
+		java.util.List<WebElement> queryFolder = driver.findElements(By.tagName("tr"));
+		
+		queryFolderloop:
+		for(WebElement tasks:queryFolder){
+			mainTask = "";
+			afrrkAttr = tasks.getAttribute("_afrrk");
+			afrapAttr = tasks.getAttribute("_afrap");
+			String loopmain = "//tr[@_afrrk='"+afrrkAttr+"']";
+			
+			if(afrapAttr == null && afrrkAttr != null){
+				retryingFindClick(By.xpath(loopmain));
+				
+				String textIn = tasks.getText();
+				System.out.println("Now holding: '"+textIn+"'");
+				index = textIn.indexOf("Yes");
+				if(index == -1){
+					index = textIn.indexOf("No");
+				} 
+				//Clean up InnerText Value.....
+				if(!textIn.isEmpty()){
+					System.out.println("Cleaning up entry.....");
+					mainTask = textIn.substring(0,index).substring(2);
+					entIndex = mainTask.lastIndexOf("\n");
+					mainTask = mainTask.substring(0,entIndex);
+					System.out.println("Filtered text:'"+mainTask+"'");
+					mainTaskHolder.add(mainTask);
+					mainTask_afrrk.add(afrrkAttr);
+					System.out.println("Now holding: "+mainTaskHolder);
+					
+					if(hasBeenFound){
+							extractData = true;
+						}
+						else if(mainTaskAttrHolder != null && mainTaskAttrHolder[mainTaskAttrHolder.length-1][0].contentEquals(mainTask)){
+							System.out.println("Similar values has been found");	
+							hasBeenFound = true;
+						}
+				}
+			}
+			
+			//System.out.println(possibleMainTasks.toString());
+			if(mainTaskAttrHolder == null && mainTaskHolder.size()>0){
+					possibleMainTasks = new String[mainTaskHolder.size()][2];
+					System.out.println("Max holder size: "+mainTaskHolder.size());
+					
+					int indexMain = 0;
+					for(String mainT: mainTaskHolder){
+						possibleMainTasks[indexMain][0] = mainT;
+						possibleMainTasks[indexMain][1] = mainTask_afrrk.get(indexMain);
+						indexMain += 1;
+					}
+					
+					System.out.println("Now exiting the function.....");
+					return possibleMainTasks;
+				}else if(extractData && mainTaskHolder.size()>0){
+					
+					possibleMainTasks = new String[mainTaskHolder.size()][2];
+					System.out.println("Max alternate holder size: "+mainTaskHolder.size());
+					
+					int indexMain = 0;
+					for(String mainT: mainTaskHolder){
+						possibleMainTasks[indexMain][0] = mainT;
+						System.out.println("Now adding mainT....."+mainT);
+						possibleMainTasks[indexMain][1] = mainTask_afrrk.get(indexMain);
+						indexMain += 1;
+					}
+					
+					System.out.println("Now exiting the alternative function.....");
+					return possibleMainTasks;
+				}
+			
+		}
 		return possibleMainTasks;
 	}	
 	public String[][] queryAllsubtaskFolder(String afrrk_main) throws Exception{
-		System.out.println("Entered the sub task function.....");
+		System.out.println("Entered the sub task function....."+afrrk_main);
 		
 		java.util.List<String> subTaskHolder = new ArrayList<String>();
 		ArrayList<String> subTask_afrrk = new ArrayList<String>();
@@ -786,6 +1038,12 @@ public class TaskListManagerTopPage extends BasePage{
 		System.out.println(possiblesubTasks.toString());
 		return possiblesubTasks;
 	}
+	public int verifyAllsubtasksCount(String afrrk_main, int oldSTCount) throws Exception{
+		
+		java.util.List<WebElement> queryFolder = driver.findElements(By.xpath("//tr[contains(@_afrap,'"+afrrk_main+"')]"));
+		return queryFolder.size();
+		
+	}
 	public String[] queryAlltaskstatusFolder() throws Exception{
 		
 		String[] possibleStatus = {};
@@ -811,5 +1069,46 @@ public class TaskListManagerTopPage extends BasePage{
 		
 		return possibleStatus;
 	}
-	
+
+	public String retryingSearchInput(String dataLocator) throws Exception{
+
+        int attempts = 0;
+        String[] inputTypesArray = {
+        		"//td/label[text()='"+dataLocator+"']/../../td/input",
+        		"//td/label[text()='"+dataLocator+"']/../../td/span/input",
+        		"//td/label[text()='"+dataLocator+"']/../../td/span/span/input",
+        		"//td/label[text()='"+dataLocator+"']/../../td/select",
+        		"//td/label[text()='"+dataLocator+"']/../../td/table/tbody/tr/td/table/tbody/tr/td/span/input"
+        };
+        
+        while(attempts < inputTypesArray.length) {
+            try {
+	            	System.out.println("Validating element.....retries:"+attempts+ " for dataLocator: "+dataLocator);
+	                driver.findElement(By.xpath(inputTypesArray[attempts])).click();
+	                System.out.println("Input tab has been found.....");
+	                return inputTypesArray[attempts];
+	                
+	            } catch(StaleElementReferenceException e) {
+	            
+	            } catch(NoSuchElementException e1){
+	            
+	            } catch(ElementNotVisibleException e2){
+	            
+	            } catch(Exception e3){
+	            	
+	            }
+            attempts++;
+        }
+        return null;
+	}
+
+	public void jsFindThenClick(String dataPath){
+		JavascriptExecutor js = (JavascriptExecutor)driver;
+		js.executeScript(
+			"function getElementByXPath(xPath){"+
+					"	return document.evaluate(xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;"+
+					"}"+
+			"getElementByXPath(\""+dataPath+"\").click();"
+		);
+	}
 }

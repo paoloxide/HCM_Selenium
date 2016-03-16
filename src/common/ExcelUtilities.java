@@ -11,6 +11,10 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.testng.annotations.Parameters;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 public class ExcelUtilities {
 	
@@ -40,8 +44,55 @@ public class ExcelUtilities {
             }catch (Exception e){
               return"";
             }
-  }	   
+  }
+  
+  public static String getCellData(int RowNum, int ColNum, String type) throws Exception{
+	  
+  	try{	        	   
+      	  Cell = ExcelWSheet.getRow(RowNum).getCell(ColNum);
+      	  switch(type){
+      	  	case "date":
+      	  		System.out.println("the value is a Date");
+      	  		Cell.setCellType(Cell.CELL_TYPE_NUMERIC);
+      	  		Date date = Cell.getDateCellValue();
+      	  		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+      	  		String dateCellData = sdf.format(date);
+      	  		System.out.println("the value is now: "+dateCellData);
+      	  			return dateCellData;
+      	  	case "text":
+      	  		System.out.println("the value is a string");
+      	  		Cell.setCellType(Cell.CELL_TYPE_STRING);
+      	  		String stringCellData = Cell.getStringCellValue();
+      	  			return stringCellData;
+      	  	case "time":
+      	  		System.out.println("the value is a time");
+      	  		Date time = Cell.getDateCellValue();
+      	  		SimpleDateFormat timesdf = new SimpleDateFormat("HH:mm");
+      	  		String timeCellData = timesdf.format(time);
+      	  			return timeCellData;
+      	  	default:
+      	  		String defCellData = Cell.getStringCellValue();
+      	  		return defCellData;
+      	  }
 
+            }catch (Exception e){
+      	  		System.out.println("error encountered while parsing.....");
+              return "";
+            }
+  }
+  
+  public static int getCellType(int RowNum, int ColNum) throws Exception{
+      int CellType = 0;
+
+  	try{	        	   
+      	  Cell = ExcelWSheet.getRow(RowNum).getCell(ColNum);
+      	  CellType = Cell.getCellType();
+  	  		return CellType;
+            
+            }catch (Exception e){
+              return 0;
+            }
+  }
 	    
   //This method is to set the File path and to open the Excel file, Pass Excel Path and Sheetname as Arguments to this method
   public static void setExcelFile(String Path,String SheetName) throws Exception {
@@ -55,7 +106,7 @@ public class ExcelUtilities {
        } catch (Exception e){
            throw (e);
        }
-}
+  }
     
   
   public static int getRowContains(String TestNo, int colNum, String sTestCaseName, int colNum2) throws Exception{

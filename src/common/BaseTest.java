@@ -58,6 +58,7 @@ import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.internal.FindsById;
+import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -80,6 +81,9 @@ import org.apache.poi.ss.usermodel.Row;
 	public class BaseTest {
 		
 		public static WebDriver driver;
+	
+		//Adding augmented driver....
+		public static WebDriver augmentedDriver;
 		
 		/** Firebug version */
 	    private static final String FIREBUG_VERSION = "1.9.0";
@@ -153,6 +157,7 @@ import org.apache.poi.ss.usermodel.Row;
 			 	
 			 	driver.close();
 		        driver.quit();
+
 		        
 		        String verificationErrorString = verificationErrors.toString();
 
@@ -199,7 +204,7 @@ import org.apache.poi.ss.usermodel.Row;
 		            if (webBrowser.equalsIgnoreCase("ie"))
 		            {
 		                File file = new File(
-		                        "C:\\Workspace\\hcmselenium\\resources\\IEDriverServer.exe");
+		                        "C:\\Users\\jerrick.m.falogme\\Desktop\\my_workspace\\HCM-Configs\\hcmselenium\\resources\\IEDriverServer.exe");
 		                System.setProperty("webdriver.ie.driver", file.getAbsolutePath());
 		                driver = new ExtendedInternetExplorerDriver(createCapabilities(webBrowser));
 		                System.out.println("Running Test in IE");
@@ -209,15 +214,22 @@ import org.apache.poi.ss.usermodel.Row;
 		            else if (webBrowser.equalsIgnoreCase("firefox"))
 		            {
 		            	driver = new RemoteWebDriver(new URL("http://selenium-hub:4444/wd/hub"), DesiredCapabilities.firefox());
+		            	//driver = new RemoteWebDriver(new URL("http://10.251.67.231:4444/wd/hub"), DesiredCapabilities.firefox());
 		            	//driver = new ExtendedFirefoxDriver(createCapabilities(webBrowser));
 		                System.out.println("Running Test in FireFox");
 		                log("Running Test in FireFox");
 		                driver.get(webappUrl);
+		                // RemoteWebDriver does not implement the TakesScreenshot class
+		                // if the driver does have the Capabilities to take a screenshot
+		                // then Augmenter will add the TakesScreenshot methods to the instance
+		                augmentedDriver = new Augmenter().augment(driver);
+		                //File screenshot = ((org.openqa.selenium.TakesScreenshot)augmentedDriver).
+		                //                    getScreenshotAs(OutputType.FILE);
 		            }
 		            else
 		            {
 		                File file = new File(
-		                        "C:\\Workspace\\hcmselenium\\resources\\chromedriver.exe");
+		                        "C:\\Users\\jerrick.m.falogme\\Desktop\\my_workspace\\HCM-Configs\\hcmselenium\\resources\\chromedriver.exe");
 		                System.setProperty("webdriver.chrome.driver", file.getAbsolutePath());
 		                driver = new ExtendedChromeDriver(createCapabilities(webBrowser));
 		                System.out.println("Running Test in Chrome");
@@ -495,9 +507,11 @@ import org.apache.poi.ss.usermodel.Row;
 	            }
 
 	            String datePrefix = new SimpleDateFormat("yyyyMMdd_HHmmssSSS").format(new Date());
+	            //3/10/2016
 	            byte[] screenshot;
-	            screenshot = ((TakesScreenshot) driver).getScreenshot(OutputType.BYTES);
-
+	            //screenshot = ((TakesScreenshot) driver).getScreenshot(OutputType.BYTES);
+	            screenshot = ((org.openqa.selenium.TakesScreenshot) augmentedDriver).getScreenshotAs(OutputType.BYTES);
+	            
 	            File screenshotFile = new File(MessageFormat.format("{0}/{1}-{2}", path, datePrefix,
 	                filename + ".png"));
 	            screenshotFileSimpleName = datePrefix + "-" + filename + ".png";
@@ -1212,6 +1226,7 @@ import org.apache.poi.ss.usermodel.Row;
 		        }
 	        	
 	    }
+	    
 	    
 	    /**
 	     * waits for an element's presence (to aid some assertion calls)
@@ -3705,6 +3720,35 @@ import org.apache.poi.ss.usermodel.Row;
 	    	return value;
 			
 		}
+		
+		//Edited jerrick.m.falogme.....
+		public String getExcelData(int rowNum, int colNum){
+			
+    	String value = "";	
+    	try{
+		value = getCellData(rowNum, colNum);	
+    			
+    	}catch (Exception e) {
+		    //exception handling
+    			
+		   }
+    	return value;
+			
+		}
+		
+		public String getExcelData(int rowNum, int colNum, String type){
+			
+			String value = "";
+	    	try{
+	      	  		value = getCellData(rowNum, colNum, type);
+	    			
+	    	}catch (Exception e) {
+			    //exception handling
+	    			
+			   }
+	    	return value;
+				
+			}
 		
 		public void searchBoxSidebar(int colNum, int colNum2){
 			try{

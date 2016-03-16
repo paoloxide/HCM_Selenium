@@ -18,7 +18,7 @@
 
 	<test name="Configure Offerings 1">    
  	 <classes>
-   	 <parameter name="TestNo" value="Test Case 12">
+   	 <parameter name="TestNo" value="Test Case 1">
 		<parameter name="ExcelFilePath" value="//var//jenkins_home//jobs//Oracle//jobs//HCM//jobs//Build//workspace//SampleTestData.xlsx"></parameter>
 		<!--parameter name="ExcelFilePath" value="C:\\Users\\jerrick.m.falogme\\Desktop\\my_workspace\\HCM-Configs\\SampleTestData.xlsx"></parameter-->
     	<parameter name="ExcelSheetName" value="Configure Offerings"></parameter>
@@ -27,7 +27,7 @@
       </classes>
   	</test> 
 	
-	<test name="Configure Offerings 2">    
+	<!--test name="Configure Offerings 2">    
  	 <classes>
    	 <parameter name="TestNo" value="Test Case 13">
 		<parameter name="ExcelFilePath" value="//var//jenkins_home//jobs//Oracle//jobs//HCM//jobs//Build//workspace//SampleTestData.xlsx"></parameter>
@@ -45,7 +45,7 @@
      	 <class name="hcm.tests.ConfigureOfferingsTest"/>      
      	 </parameter>
       </classes>
-  	</test> 
+  	</test--> 
 	
 	<!--test name="Configure Offerings 4">    
  	 <classes>
